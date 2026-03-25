@@ -28,8 +28,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'dry-schema', '< 1.13'
   gem.add_dependency 'faraday', '>= 0.17', '< 2'
   gem.add_dependency 'faraday-cookie_jar', '~> 0.0.7'
-  gem.add_dependency 'faraday-follow_redirects', '~> 0.3.0'
-  gem.add_dependency 'faraday-multipart', '~> 1.0.0'
 
   gem.add_development_dependency 'bundler', '~> 2.0', '>= 2.0.2'
   gem.add_development_dependency 'rake', '~> 13.0'

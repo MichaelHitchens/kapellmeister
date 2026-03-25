@@ -1,5 +1,16 @@
-require 'faraday/follow_redirects'
-require 'faraday/multipart'
+begin
+  require 'faraday/follow_redirects'
+  FOLLOW_REDIRECTS_AVAILABLE = true
+rescue LoadError
+  FOLLOW_REDIRECTS_AVAILABLE = false
+end
+
+begin
+  require 'faraday/multipart'
+  MULTIPART_AVAILABLE = true
+rescue LoadError
+  MULTIPART_AVAILABLE = false
+end
 
 # Optional: use :typhoeus adapter when faraday-typhoeus is installed.
 # This keeps kapellmeister compatible with Faraday 0.x dependency trees.
@@ -68,10 +79,10 @@ class Kapellmeister::Dispatcher
     headers = headers_generate(**additional_headers)
     @connection ||= ::Faraday.new(url: configuration.url, headers: headers, request: request) do |faraday| # rubocop:disable Style/HashSyntax (for support ruby 2.4+)
       faraday.request :json, content_type: 'application/json; charset=utf-8'
-      faraday.request :multipart
+      faraday.request :multipart if MULTIPART_AVAILABLE
       faraday.response :logger, logger
       faraday.response :json, content_type: 'application/json; charset=utf-8'
-      faraday.response :follow_redirects
+      faraday.response :follow_redirects if FOLLOW_REDIRECTS_AVAILABLE
 
       if TYPHOEUS_ADAPTER_AVAILABLE
         faraday.adapter :typhoeus do |http|

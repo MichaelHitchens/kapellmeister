@@ -6,8 +6,6 @@ gemspec
 
 gem 'dry-schema'
 gem 'faraday'
-gem 'faraday-follow_redirects'
-gem 'faraday-multipart'
 
 # debug
 group :development do
