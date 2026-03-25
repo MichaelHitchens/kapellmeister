@@ -1,6 +1,14 @@
 require 'faraday/follow_redirects'
-require 'faraday/typhoeus'
 require 'faraday/multipart'
+
+# Optional: use :typhoeus adapter when faraday-typhoeus is installed.
+# This keeps kapellmeister compatible with Faraday 0.x dependency trees.
+begin
+  require 'faraday/typhoeus'
+  TYPHOEUS_ADAPTER_AVAILABLE = true
+rescue LoadError
+  TYPHOEUS_ADAPTER_AVAILABLE = false
+end
 require_relative 'requests_extension'
 
 class Kapellmeister::Dispatcher
@@ -64,8 +72,23 @@ class Kapellmeister::Dispatcher
       faraday.response :logger, logger
       faraday.response :json, content_type: 'application/json; charset=utf-8'
       faraday.response :follow_redirects
-      faraday.adapter :typhoeus do |http|
-        http.timeout = 20
+
+      if TYPHOEUS_ADAPTER_AVAILABLE
+        faraday.adapter :typhoeus do |http|
+          http.timeout = 20
+        end
+      else
+        # Faraday has multiple adapters depending on the Faraday version.
+        # Default to :net_http when typhoeus adapter isn't available.
+        faraday.adapter :net_http do |http|
+          if http.respond_to?(:timeout=)
+            http.timeout = 20
+          elsif http.respond_to?(:options) && http.options.respond_to?(:timeout=)
+            http.options.timeout = 20
+          elsif http.respond_to?(:options) && http.options.respond_to?(:[]=)
+            http.options[:timeout] = 20
+          end
+        end
       end
     end
   end

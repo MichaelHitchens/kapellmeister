@@ -8,7 +8,6 @@ gem 'dry-schema'
 gem 'faraday'
 gem 'faraday-follow_redirects'
 gem 'faraday-multipart'
-gem 'faraday-typhoeus'
 
 # debug
 group :development do
