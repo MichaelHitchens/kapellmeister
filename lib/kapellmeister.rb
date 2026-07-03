@@ -23,16 +23,24 @@ end
 class Hash
   def deep_compact
     each_with_object({}) do |(key, value), hash|
-      if (new_value = value.deep_compact)
+      if value == false
+        hash[key] = false
+      elsif (new_value = value.deep_compact)
         hash[key] = new_value
       end
     end
   end
 
   def deep_compact!
-    each do |key, value|
-      if (new_value = value.deep_compact)
+    keys.each do |key|
+      value = self[key]
+
+      if value == false
+        self[key] = false
+      elsif (new_value = value.deep_compact)
         self[key] = new_value
+      else
+        delete(key)
       end
     end
   end

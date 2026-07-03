@@ -13,6 +13,6 @@ class <%= class_name %>::Configuration
     https = ssl unless ssl.nil?
     https = <%= class_name %>.ssl unless <%= class_name %>.ssl.nil?
 
-    "URI::HTTP#{https.to_b ? 'S' : ''}".constantize.build(host:, path: [path, version].join('/'))
+    "URI::HTTP#{https.to_b ? 'S' : ''}".constantize.build(host: host, path: [path, version].join('/'))
   end
 end

@@ -10,3 +10,5 @@
 #         mock:             => Structure or Path to mock file for tests. If key doesn't exist nothing happens
 #
 # Client.foo_bar { a: 'b' } => POST http://host/foo/buz DATA: { a: 'b' }
+
+{}
